@@ -1,0 +1,6 @@
+POST http://127.0.0.1:8000/apis/books
+Content-Type: application/json
+
+{
+  "query": "세종대왕이 나오는 책"
+}
