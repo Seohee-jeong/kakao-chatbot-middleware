@@ -2,5 +2,49 @@ POST http://127.0.0.1:8000/apis/books
 Content-Type: application/json
 
 {
-  "query": "세종대왕이 나오는 책"
+  "intent": {
+    "id": "w1bm0plza73crd2obd56ygfy",
+    "name": "블록 이름"
+  },
+  "userRequest": {
+    "timezone": "Asia/Seoul",
+    "params": {
+      "ignoreMe": "true"
+    },
+    "block": {
+      "id": "w1bm0plza73crd2obd56ygfy",
+      "name": "블록 이름"
+    },
+    "utterance": "발화 내용",
+    "lang": null,
+    "user": {
+      "id": "359643",
+      "type": "accountId",
+      "properties": {}
+    },
+    "callbackUrl": "https://bot-api.kakao.com/v1/bots/67bff6215a70956279660067!/callback/cbtest:f2b033ecd4a740e6bd2dd0fdfb7b6836"
+  },
+  "bot": {
+    "id": "67bff6215a70956279660067",
+    "name": "봇 이름"
+  },
+  "action": {
+    "name": "h7tanggel2",
+    "clientExtra": null,
+    "params": {
+      "query": "어린왕자"
+    },
+    "id": "teuak2498p2nf4omou9zas1j",
+    "detailParams": {
+      "query": {
+        "origin": "어린왕자",
+        "value": "어린왕자",
+        "groupName": ""
+      }
+    }
+  }
 }
+
+
+# POST https://kakao-chatbot-middleware-144322417109.asia-northeast3.run.app/apis/books
+# Content-Type: application/json
