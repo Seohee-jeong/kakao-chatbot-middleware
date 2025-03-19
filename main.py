@@ -1,4 +1,5 @@
 import asyncio
+import time
 from fastapi import FastAPI, HTTPException, Request, BackgroundTasks
 import httpx
 
@@ -41,10 +42,11 @@ async def proxy_books(request: Request, background_tasks: BackgroundTasks):
     return callback_response
 
 
-async def search_books_from_agent_space(url: str, query: str):
+async def search_books_from_agent_space(url: str, query: str, retry_count: int):
     payload = {
         "query": query,
     }
+    print("retry_count : ", retry_count)
     async with httpx.AsyncClient() as client:
         response_data = {
             "version": "2.0",
@@ -52,11 +54,13 @@ async def search_books_from_agent_space(url: str, query: str):
         }
         try:
             response = await client.post(url, json=payload)
-        except httpx.TimeoutException as te:
-            print("time out error", te)
-            return response_data
         except httpx.HTTPError as e:
-            print("외부 요청 에러:", e)
+            retry_count += 1
+            if retry_count <= 3:
+                time.sleep(retry_count * 10)
+                search_books_from_agent_space(url, query, retry_count)
+            else:
+                print("외부 요청 에러:", e)
             return response_data
 
     external_data = response.json()
@@ -90,7 +94,7 @@ async def handle_search_books(request_payload, callback_url):
     try:
         # search_books_from_agent_space가 시간이 오래 걸릴 수 있으므로 비동기 처리
         result = await search_books_from_agent_space(
-            agent_space_url, request_payload["query"]
+            agent_space_url, request_payload["query"], 0
         )
 
         print("callback url : ", callback_url)
