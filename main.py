@@ -46,18 +46,17 @@ async def search_books_from_agent_space(url: str, query: str):
         "query": query,
     }
     async with httpx.AsyncClient() as client:
+        response_data = {
+            "version": "2.0",
+            "template": {"outputs": [{"simpleText": "잠시 뒤에 다시 시도해주세요."}]},
+        }
         try:
             response = await client.post(url, json=payload)
+        except httpx.TimeoutException as te:
+            print("time out error", te)
+            return response_data
         except httpx.HTTPError as e:
             print("외부 요청 에러:", e)
-            response_data = {
-                "version": "2.0",
-                "template": {
-                    "outputs": [
-                        {"simpleText": "agent space 서버에서 에러가 발생했습니다."}
-                    ]
-                },
-            }
             return response_data
 
     external_data = response.json()
